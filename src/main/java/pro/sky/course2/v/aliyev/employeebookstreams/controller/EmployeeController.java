@@ -1,5 +1,7 @@
 package pro.sky.course2.v.aliyev.employeebookstreams.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,7 +9,6 @@ import pro.sky.course2.v.aliyev.employeebookstreams.model.Employee;
 import pro.sky.course2.v.aliyev.employeebookstreams.service.EmployeeService;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RestController
 @RequestMapping("employee")
@@ -19,19 +20,31 @@ public class EmployeeController {
     }
 
     @RequestMapping("add")
-    public Employee add(@RequestParam String firstName, @RequestParam String lastName,
-                        @RequestParam float salary, @RequestParam int departmentId) {
-        return employeeService.add(firstName, lastName, salary, departmentId);
+    public ResponseEntity<Employee> add(@RequestParam String firstName, @RequestParam String lastName,
+                                      @RequestParam float salary, @RequestParam int departmentId) {
+        Employee employee = employeeService.add(firstName, lastName, salary, departmentId);
+        if (employee == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.ok(employee);
     }
 
     @RequestMapping("remove")
-    public Employee remove(@RequestParam String firstName, @RequestParam String lastName) {
-        return employeeService.remove(firstName, lastName);
+    public ResponseEntity<Employee> remove(@RequestParam String firstName, @RequestParam String lastName) {
+        Employee employee = employeeService.remove(firstName, lastName);
+        if (employee == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.ok(employee);
     }
 
     @RequestMapping("find")
-    public Employee find(@RequestParam String firstName, @RequestParam String lastName) {
-        return employeeService.find(firstName, lastName);
+    public ResponseEntity<Employee> find(@RequestParam String firstName, @RequestParam String lastName) {
+        Employee employee = employeeService.find(firstName, lastName);
+        if (employee == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.ok(employee);
     }
 
     @RequestMapping()

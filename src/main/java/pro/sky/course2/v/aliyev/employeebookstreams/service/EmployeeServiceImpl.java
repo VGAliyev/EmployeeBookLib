@@ -1,5 +1,6 @@
 package pro.sky.course2.v.aliyev.employeebookstreams.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.course2.v.aliyev.employeebookstreams.exception.EmployeeAlreadyAddedException;
 import pro.sky.course2.v.aliyev.employeebookstreams.exception.EmployeeNotFoundException;
@@ -17,10 +18,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee add(String firstName, String lastName, float salary, int departmentId) {
         String fullName = getFullName(firstName, lastName);
+        if (!validateEmployee(fullName)) {
+            return null;
+        }
+
         if (employees.containsKey(fullName)) {
             throw new EmployeeAlreadyAddedException("Сотрудник " + fullName + " уже есть в системе!");
         }
-        Employee employee = new Employee(firstName, lastName, salary, departmentId);
+        Employee employee = new Employee(capitalize(firstName), capitalize(lastName), salary, departmentId);
         employees.put(fullName, employee);
         return employee;
     }
@@ -28,6 +33,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee remove(String firstName, String lastName) {
         String fullName = getFullName(firstName, lastName);
+        if (!validateEmployee(fullName)) {
+            return null;
+        }
+
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException("Сотрудник " + fullName + " не найден в системе!");
         }
@@ -39,6 +48,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee find(String firstName, String lastName) {
         String fullName = getFullName(firstName, lastName);
+        if (!validateEmployee(fullName)) {
+            return null;
+        }
+
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException("Сотрудник " + fullName + " не найден в системе!");
         }
@@ -51,6 +64,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private static String getFullName(String firstName, String lastName) {
-        return firstName + " " + lastName;
+        return capitalize(firstName) + " " + capitalize(lastName);
+    }
+
+    private static boolean validateEmployee(String fullName) {
+        return StringUtils.isAlphaSpace(fullName);
+    }
+
+    private static String capitalize(String name) {
+        return StringUtils.capitalize(name);
     }
 }
