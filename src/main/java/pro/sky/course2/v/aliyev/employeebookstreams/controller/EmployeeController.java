@@ -7,7 +7,6 @@ import pro.sky.course2.v.aliyev.employeebookstreams.model.Employee;
 import pro.sky.course2.v.aliyev.employeebookstreams.service.EmployeeService;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RestController
 @RequestMapping("employee")

@@ -1,8 +1,10 @@
 package pro.sky.course2.v.aliyev.employeebookstreams.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.sky.course2.v.aliyev.employeebookstreams.exception.EmployeeAlreadyAddedException;
 import pro.sky.course2.v.aliyev.employeebookstreams.exception.EmployeeNotFoundException;
+import pro.sky.course2.v.aliyev.employeebookstreams.exception.EmployeeNotValidateException;
 import pro.sky.course2.v.aliyev.employeebookstreams.model.Employee;
 
 import java.util.Collection;
@@ -16,6 +18,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee add(String firstName, String lastName, float salary, int departmentId) {
+        validate(firstName, lastName);
         String fullName = getFullName(firstName, lastName);
         if (employees.containsKey(fullName)) {
             throw new EmployeeAlreadyAddedException("Сотрудник " + fullName + " уже есть в системе!");
@@ -27,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remove(String firstName, String lastName) {
+        validate(firstName, lastName);
         String fullName = getFullName(firstName, lastName);
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException("Сотрудник " + fullName + " не найден в системе!");
@@ -38,6 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee find(String firstName, String lastName) {
+        validate(firstName, lastName);
         String fullName = getFullName(firstName, lastName);
         if (!employees.containsKey(fullName)) {
             throw new EmployeeNotFoundException("Сотрудник " + fullName + " не найден в системе!");
@@ -52,5 +57,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private static String getFullName(String firstName, String lastName) {
         return firstName + " " + lastName;
+    }
+
+    private void validate(String firstName, String lastName) {
+        if (!(StringUtils.isAlpha(firstName) && StringUtils.isAlpha(lastName))) {
+            throw new EmployeeNotValidateException("Not valid employee firstname or lastname!");
+        }
     }
 }

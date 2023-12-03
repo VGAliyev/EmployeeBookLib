@@ -1,5 +1,7 @@
 package pro.sky.course2.v.aliyev.employeebookstreams.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class Employee {
@@ -17,8 +19,8 @@ public class Employee {
      * @param departmentId  - department ID
      */
     public Employee(String firstName, String lastName, float salary, int departmentId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = StringUtils.capitalize(firstName.toLowerCase());
+        this.lastName = StringUtils.capitalize(lastName.toLowerCase());
         this.salary = salary;
         this.department = departmentId;
     }
